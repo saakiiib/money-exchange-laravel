@@ -10,6 +10,7 @@
 
             <div class="card-body">
                 <p>Welcome to the Admin Dashboard, {{ Auth::user()->name }}!</p>
+                <a href="{{ route('admin.exchangeRates') }}">Exchange Rates</a>
 
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
