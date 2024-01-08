@@ -9,7 +9,7 @@
                     <h1 class="mb-0">Users</h1>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="userTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -70,6 +70,7 @@
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 <script>
     const { createApp } = Vue;
 
@@ -94,28 +95,29 @@
                     },
                     body: JSON.stringify(this.formData)
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Server error');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const tableBody = document.querySelector('.table tbody');
-                        const newRow = tableBody.insertRow(-1);
-                        newRow.insertCell(0).innerText = data.name;
-                        newRow.insertCell(1).innerText = data.email;
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server error');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.querySelector('.table tbody');
+                    const newRow = tableBody.insertRow(-1);
+                    newRow.insertCell(0).innerText = data.id;
+                    newRow.insertCell(1).innerText = data.name;
+                    newRow.insertCell(2).innerText = data.email;
+                    newRow.insertCell(3).innerText = data.role;
 
-                        // Reset the form data for new usage
-                        this.formData.name = '';
-                        this.formData.email = '';
-                        this.formData.password = '';
+                    this.formData.name = '';
+                    this.formData.email = '';
+                    this.formData.password = '';
 
-                        this.displaySuccessMessage('User added successfully.');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                    this.displaySuccessMessage('User added successfully.');
+                })
+                .catch(error => {
+                    console.error(error);
+                });
             },
             displaySuccessMessage(message) {
                 alert(message);
