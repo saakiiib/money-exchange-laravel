@@ -13,7 +13,8 @@
                     <p>Welcome to the Admin Dashboard, {{ Auth::user()->name }}!</p>
                     <div class="dashboard-links">
                         <a href="{{ route('admin.exchangeRates') }}" class="btn btn-primary">Exchange Rates</a>
-                        <a href="{{ route('admin.users.index') }}" class="btn btn-success">Manage Users</a>
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-success">Add User</a>
+                        <a href="{{ route('admin.users.list') }}" class="btn btn-success">Manage Users</a>
                     </div>
                 </div>
 

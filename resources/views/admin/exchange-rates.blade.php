@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <h1>Exchange Rates</h1>
 @if ($exchangeRates)
