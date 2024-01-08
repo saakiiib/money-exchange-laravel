@@ -14,10 +14,18 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
+                                <th @click="sortBy('id')">ID <span
+                                        :class="{'arrow-up': sortKey === 'id' && sortOrders['id'] === 1, 'arrow-down': sortKey === 'id' && sortOrders['id'] === -1}"></span>
+                                </th>
+                                <th @click="sortBy('name')">Name <span
+                                        :class="{'arrow-up': sortKey === 'name' && sortOrders['name'] === 1, 'arrow-down': sortKey === 'name' && sortOrders['name'] === -1}"></span>
+                                </th>
+                                <th @click="sortBy('email')">Email <span
+                                        :class="{'arrow-up': sortKey === 'email' && sortOrders['email'] === 1, 'arrow-down': sortKey === 'email' && sortOrders['email'] === -1}"></span>
+                                </th>
+                                <th @click="sortBy('role')">Role <span
+                                        :class="{'arrow-up': sortKey === 'role' && sortOrders['role'] === 1, 'arrow-down': sortKey === 'role' && sortOrders['role'] === -1}"></span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,6 +75,16 @@
     </div>
 </div>
 
+<style>
+    .arrow-up::before {
+        content: '\25B2';
+    }
+
+    .arrow-down::before {
+        content: '\25BC';
+    }
+</style>
+
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
     const { createApp } = Vue;
@@ -80,14 +98,34 @@
                     name: '',
                     email: '',
                     password: ''
+                },
+                sortKey: '',
+                sortOrders: {
+                    id: 1,
+                    name: 1,
+                    email: 1,
+                    role: 1
                 }
             };
         },
         computed: {
+            sortedUsers() {
+                const key = this.sortKey;
+                const order = this.sortOrders[key] || 1;
+                const array = this.users.slice();
+                return array.sort((a, b) => {
+                    const modifier = order === 1 ? 1 : -1;
+                    if (a[key] < b[key]) return -1 * modifier;
+                    if (a[key] > b[key]) return 1 * modifier;
+                    return 0;
+                });
+            },
             filteredUsers() {
-                return this.users.filter(user => {
-                    return user.name.toLowerCase().includes(this.search.toLowerCase()) ||
-                           user.email.toLowerCase().includes(this.search.toLowerCase());
+                const searchLower = this.search.toLowerCase();
+
+                return this.sortedUsers.filter(user => {
+                    return user.name.toLowerCase().includes(searchLower) ||
+                           user.email.toLowerCase().includes(searchLower);
                 });
             }
         },
@@ -123,6 +161,10 @@
             },
             displaySuccessMessage(message) {
                 alert(message);
+            },
+            sortBy(key) {
+                this.sortKey = key;
+                this.sortOrders[key] = this.sortOrders[key] * -1;
             }
         },
     }).mount('#app');
