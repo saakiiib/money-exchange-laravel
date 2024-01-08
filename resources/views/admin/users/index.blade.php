@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" id="app">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -9,7 +9,9 @@
                     <h1 class="mb-0">Users</h1>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered" id="userTable">
+                    <input type="text" v-model="search" class="form-control mb-3" placeholder="Search users...">
+
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -19,14 +21,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
+                            <tr v-for="user in filteredUsers" :key="user.id">
+                                <td>@{{ user.id }}</td>
+                                <td>@{{ user.name }}</td>
+                                <td>@{{ user.email }}</td>
+                                <td>@{{ user.role }}</td>
                             </tr>
-                            @endforeach
                         </tbody>
                     </table>
 
@@ -43,26 +43,24 @@
                     <h2 class="mb-0">Add User</h2>
                 </div>
                 <div class="card-body">
-                    <div id="app">
-                        <form @submit.prevent="submitForm">
-                            <div class="mb-3">
-                                <label for="name">Name:</label>
-                                <input v-model="formData.name" type="text" id="name" name="name" required
-                                    class="form-control" placeholder="Enter name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="email">Email:</label>
-                                <input v-model="formData.email" type="email" id="email" name="email" required
-                                    class="form-control" placeholder="Enter email">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password">Password:</label>
-                                <input v-model="formData.password" type="password" id="password" name="password"
-                                    required class="form-control" placeholder="Enter password">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Add User</button>
-                        </form>
-                    </div>
+                    <form @submit.prevent="submitForm">
+                        <div class="mb-3">
+                            <label for="name">Name:</label>
+                            <input v-model="formData.name" type="text" id="name" name="name" required
+                                class="form-control" placeholder="Enter name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email">Email:</label>
+                            <input v-model="formData.email" type="email" id="email" name="email" required
+                                class="form-control" placeholder="Enter email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password">Password:</label>
+                            <input v-model="formData.password" type="password" id="password" name="password" required
+                                class="form-control" placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -70,19 +68,28 @@
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 <script>
     const { createApp } = Vue;
 
     createApp({
         data() {
             return {
+                users: @json($users->items()),
+                search: '',
                 formData: {
                     name: '',
                     email: '',
                     password: ''
                 }
             };
+        },
+        computed: {
+            filteredUsers() {
+                return this.users.filter(user => {
+                    return user.name.toLowerCase().includes(this.search.toLowerCase()) ||
+                           user.email.toLowerCase().includes(this.search.toLowerCase());
+                });
+            }
         },
         methods: {
             submitForm() {
@@ -102,12 +109,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    const tableBody = document.querySelector('.table tbody');
-                    const newRow = tableBody.insertRow(-1);
-                    newRow.insertCell(0).innerText = data.id;
-                    newRow.insertCell(1).innerText = data.name;
-                    newRow.insertCell(2).innerText = data.email;
-                    newRow.insertCell(3).innerText = data.role;
+                    this.users.push(data);
 
                     this.formData.name = '';
                     this.formData.email = '';
@@ -122,7 +124,7 @@
             displaySuccessMessage(message) {
                 alert(message);
             }
-        }
+        },
     }).mount('#app');
 </script>
 @endsection
