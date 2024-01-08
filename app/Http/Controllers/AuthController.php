@@ -66,4 +66,16 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
+    public function editProfile()
+    {
+        return view('user.edit-profile');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+        $user->update($request->except('role'));
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
 }

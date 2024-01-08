@@ -13,6 +13,9 @@
                     <p>Welcome, {{ auth()->user()->name }}!</p>
                     <p>This is your dashboard. Add your content here.</p>
                 </div>
+                <div class="card-body">
+                    <a href="{{ route('edit-profile.edit') }}" class="btn btn-link">Edit Profile</a>
+                </div>
 
                 <div class="card-footer">
                     <form method="POST" action="{{ route('logout') }}">

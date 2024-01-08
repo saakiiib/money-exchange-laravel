@@ -38,4 +38,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::group(['middleware' => 'user'], function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/edit-profile', [AuthController::class, 'editProfile'])->name('edit-profile.edit');
+    Route::put('/edit-profile', [AuthController::class, 'updateProfile'])->name('edit-profile.update');
 });
