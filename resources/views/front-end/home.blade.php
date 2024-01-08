@@ -15,8 +15,8 @@
                 </div>
 
                 <div class="card-footer text-center mt-3">
-                    <p>Already have an account? <a href="#">Sign In</a></p>
-                    <p>New to our platform? <a href="#">Sign Up</a></p>
+                    <p>Already have an account? <a href="{{ route('login') }}">Sign In</a></p>
+                    <p>New to our platform? <a href="{{ route('register') }}">Sign Up</a></p>
                 </div>
             </div>
         </div>
