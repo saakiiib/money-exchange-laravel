@@ -17,7 +17,11 @@ class ExchangeRateController extends Controller
     public function showExchangeRates()
     {
         $exchangeRates = $this->exchangeRateService->getExchangeRates();
-        // dd($exchangeRates);
-        return view('admin.exchange-rates', compact('exchangeRates'));
+
+        if (request()->is('admin/*')) {
+            return view('admin.exchange-rates', compact('exchangeRates'));
+        } else {
+            return view('front-end.exchange', compact('exchangeRates'));
+        }
     }
 }
